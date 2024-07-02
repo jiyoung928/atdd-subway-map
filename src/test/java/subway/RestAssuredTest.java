@@ -15,7 +15,6 @@ public class RestAssuredTest {
     @DisplayName("구글 페이지 접근 테스트")
     @Test
     void accessGoogle() {
-        // TODO: 구글 페이지 요청 구현
         //given
         ExtractableResponse<Response> response = null;
         String url = "https://www.google.com";
