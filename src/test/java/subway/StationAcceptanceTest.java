@@ -58,11 +58,10 @@ public class StationAcceptanceTest {
     @DisplayName("지하철역을 조회한다.")
     @Test
     void showStation() {
-        // when
+        // given
         Map<String, String> params = new HashMap<>();
 
         params.put("name", "서울역");
-
         ExtractableResponse<Response> response =
                 RestAssured.given().log().all()
                         .body(params)
@@ -82,15 +81,16 @@ public class StationAcceptanceTest {
                         .then().log().all()
                         .extract();
 
-        // then
+
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
 
-        // then
+        // when
         List<String> stationNames =
                 RestAssured.given().log().all()
                         .when().get("/stations")
                         .then().log().all()
                         .extract().jsonPath().getList("name", String.class);
+        //then
         assertThat(stationNames).contains("서울역", "수원역");
     }
 
@@ -102,7 +102,7 @@ public class StationAcceptanceTest {
     @DisplayName("지하철역을 삭제한다.")
     @Test
     void deleteStation() {
-        // when
+        // given
         Map<String, String> params = new HashMap<>();
         params.put("name", "정자역");
 
@@ -114,6 +114,7 @@ public class StationAcceptanceTest {
                         .then().log().all()
                         .extract().jsonPath().getInt("id");
 
+        //when
         ExtractableResponse<Response> response =
                 RestAssured.given().log().all()
                         .body(params)
@@ -122,7 +123,6 @@ public class StationAcceptanceTest {
                         .then().log().all()
                         .extract();
 
-        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
 
         // then
