@@ -59,30 +59,7 @@ public class StationAcceptanceTest {
     @Test
     void showStation() {
         // given
-        Map<String, String> params = new HashMap<>();
-
-        params.put("name", "서울역");
-        ExtractableResponse<Response> response =
-                RestAssured.given().log().all()
-                        .body(params)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .when().post("/stations")
-                        .then().log().all()
-                        .extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-
-        params.put("name", "수원역");
-        response =
-                RestAssured.given().log().all()
-                        .body(params)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .when().post("/stations")
-                        .then().log().all()
-                        .extract();
-
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        createTwoStation();
 
         // when
         List<String> stationNames =
@@ -133,4 +110,34 @@ public class StationAcceptanceTest {
                         .extract().jsonPath().getList("name", String.class);
         assertThat(stationNames).doesNotContain("정자역");
     }
+
+    void createTwoStation() {
+        Map<String, String> paramSeoul = new HashMap<>();
+        paramSeoul.put("name", "서울역");
+
+        ExtractableResponse<Response> response =
+                RestAssured.given().log().all()
+                        .body(paramSeoul)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .when().post("/stations")
+                        .then().log().all()
+                        .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+
+        Map<String, String> paramSuwon = new HashMap<>();
+        paramSuwon.put("name", "수원역");
+
+        response =
+                RestAssured.given().log().all()
+                        .body(paramSuwon)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .when().post("/stations")
+                        .then().log().all()
+                        .extract();
+
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
 }
+
