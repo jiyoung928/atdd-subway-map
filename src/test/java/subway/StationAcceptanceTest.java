@@ -83,13 +83,14 @@ public class StationAcceptanceTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "정자역");
 
-        int stationId =
+        String stationId  =
                 RestAssured.given().log().all()
                         .body(params)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .when().post("/stations")
-                        .then().log().all()
-                        .extract().jsonPath().getInt("id");
+                        .getHeaders()
+                        .get("Location").toString().split("/")[2];
+
 
         //when
         ExtractableResponse<Response> response =
