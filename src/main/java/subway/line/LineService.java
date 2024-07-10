@@ -25,12 +25,7 @@ public class LineService {
     public LineResponse saveLine(LineRequest lineRequest) {
         Line line = lineRepository.save(new Line(lineRequest.getName(), lineRequest.getColor(), lineRequest.getUpStationId(), lineRequest.getDownStationId(), lineRequest.getDistance()));
 
-        List<Station> stationList = new ArrayList<>();
-
-        stationList.add(stationRepository.findById(lineRequest.getUpStationId())
-                .orElseThrow(IllegalArgumentException::new));
-        stationList.add(stationRepository.findById(lineRequest.getDownStationId())
-                .orElseThrow(IllegalArgumentException::new));
+        List<Station> stationList = findStationById(line.getUpStationId(), line.getDownStationId());
 
         return createLineResponse(line, stationList);
     }
@@ -51,10 +46,7 @@ public class LineService {
         List<LineResponse> lineResponses = new ArrayList<>();
 
         for (Line line : lines) {
-            stationList.add(stationRepository.findById(line.getUpStationId())
-                    .orElseThrow(IllegalArgumentException::new));
-            stationList.add(stationRepository.findById(line.getDownStationId())
-                    .orElseThrow(IllegalArgumentException::new));
+            findStationById(line.getUpStationId(), line.getDownStationId());
 
             LineResponse lineResponse = new LineResponse(line.getId(), line.getName(), line.getColor(), stationList);
             lineResponses.add(lineResponse);
@@ -64,6 +56,16 @@ public class LineService {
         return lineResponses;
     }
 
+    public List<Station> findStationById(Long upStationId, Long downStationId) {
+        List<Station> stationList = new ArrayList<>();
+
+        stationList.add(stationRepository.findById(upStationId)
+                .orElseThrow(IllegalArgumentException::new));
+        stationList.add(stationRepository.findById(downStationId)
+                .orElseThrow(IllegalArgumentException::new));
+
+        return stationList;
+    }
     @Transactional
     public void editLineById(Long id, LineRequest lineRequest) {
         Line line = lineRepository.findById(id).orElseThrow(IllegalArgumentException::new);
