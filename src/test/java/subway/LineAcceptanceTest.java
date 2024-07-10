@@ -41,18 +41,10 @@ public class LineAcceptanceTest {
     void createLine() {
 
         // given
-        LineRequest lineRequest = new LineRequest();
-        lineRequest.setName("신분당선");
-        lineRequest.setColor("red");
-        lineRequest.setUpStationId(1);
-        lineRequest.setDownStationId(2);
-        lineRequest.setDistance(10);
-
-
         // when
         // then
-        assertThat(createLine(lineRequest).statusCode()).isEqualTo(HttpStatus.CREATED.value());
-
+        assertThat(createLine(new LineRequest("신분당선", "bg-red-600", 1, 2, 10))
+                .statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     /**
@@ -64,23 +56,11 @@ public class LineAcceptanceTest {
     @Test
     void showLines() {
         // given
-        LineRequest lineRequestRed = new LineRequest();
-        lineRequestRed.setName("신분당선");
-        lineRequestRed.setColor("bg-red-600");
-        lineRequestRed.setUpStationId(1);
-        lineRequestRed.setDownStationId(2);
-        lineRequestRed.setDistance(10);
+        assertThat(createLine(new LineRequest("신분당선", "bg-red-600", 1, 2, 10))
+                .statusCode()).isEqualTo(HttpStatus.CREATED.value());
 
-        assertThat(createLine(lineRequestRed).statusCode()).isEqualTo(HttpStatus.CREATED.value());
-
-        LineRequest lineRequestGreen = new LineRequest();
-        lineRequestGreen.setName("분당선");
-        lineRequestGreen.setColor("bg-green-600");
-        lineRequestGreen.setUpStationId(1);
-        lineRequestGreen.setDownStationId(3);
-        lineRequestGreen.setDistance(20);
-
-        assertThat(createLine(lineRequestGreen).statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(createLine(new LineRequest("분당선", "bg-green-600", 1, 3, 20))
+                .statusCode()).isEqualTo(HttpStatus.CREATED.value());
 
         // when
         List<String> lineNames =
@@ -102,14 +82,9 @@ public class LineAcceptanceTest {
     @Test
     void showLine() {
         // given
-        LineRequest lineRequestRed = new LineRequest();
-        lineRequestRed.setName("신분당선");
-        lineRequestRed.setColor("bg-red-600");
-        lineRequestRed.setUpStationId(1);
-        lineRequestRed.setDownStationId(2);
-        lineRequestRed.setDistance(10);
+        assertThat(createLine(new LineRequest("신분당선", "bg-red-600", 1, 2, 10))
+                .statusCode()).isEqualTo(HttpStatus.CREATED.value());
 
-        assertThat(createLine(lineRequestRed).statusCode()).isEqualTo(HttpStatus.CREATED.value());
         // when
         List<String> lineNames =
                 given().log().all()
@@ -129,14 +104,8 @@ public class LineAcceptanceTest {
     @Test
     void editLine() {
         // given
-        LineRequest lineRequestRed = new LineRequest();
-        lineRequestRed.setName("신분당선");
-        lineRequestRed.setColor("bg-red-600");
-        lineRequestRed.setUpStationId(1);
-        lineRequestRed.setDownStationId(2);
-        lineRequestRed.setDistance(10);
-
-        String lineId  =   createLine(lineRequestRed).getHeaders().get("Location").toString().split("/")[2];
+        String lineId  =   createLine(new LineRequest("신분당선", "bg-red-600", 1, 2, 10))
+                .getHeaders().get("Location").toString().split("/")[2];
 
 
         //when
@@ -165,14 +134,8 @@ public class LineAcceptanceTest {
     @Test
     void deleteLine() {
         // given
-        LineRequest lineRequestRed = new LineRequest();
-        lineRequestRed.setName("신분당선");
-        lineRequestRed.setColor("bg-red-600");
-        lineRequestRed.setUpStationId(1);
-        lineRequestRed.setDownStationId(2);
-        lineRequestRed.setDistance(10);
-
-        String lineId  =   createLine(lineRequestRed).getHeaders().get("Location").toString().split("/")[2];
+        String lineId  =   createLine(new LineRequest("신분당선", "bg-red-400", 1, 2, 10))
+                .getHeaders().get("Location").toString().split("/")[2];
 
         //when
         ExtractableResponse<Response> response =
