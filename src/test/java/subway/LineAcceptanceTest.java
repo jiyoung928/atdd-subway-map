@@ -1,7 +1,9 @@
 package subway;
 
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,11 +21,16 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("지하철 노선 관련 기능")
-@Sql({"/sql/station-data.sql"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class LineAcceptanceTest {
 
+    @BeforeEach
+    void initStation(){
+        createStation("지하철역");
+        createStation("새로운지하철역");
+        createStation("또다른지하철역");
+    }
     /**
      * Given: 새로운 지하철 노선 정보를 입력하고,
      * When: 관리자가 노선을 생성하면,
@@ -223,6 +230,14 @@ public class LineAcceptanceTest {
 
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    private Response createStation(String stationName) {
+        return RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("{\"name\":\""+ stationName +"\"}")
+                .when()
+                .post("/stations")
+                .then()
+                .extract().response();
     }
 
 }
