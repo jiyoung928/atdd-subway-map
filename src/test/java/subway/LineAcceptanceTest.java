@@ -69,7 +69,7 @@ public class LineAcceptanceTest {
                         .then().log().all()
                         .extract().jsonPath().getList("name", String.class);
         //then
-        assertThat(lineNames).contains("신분당선", "분당선");
+        assertThat(lineNames).containsExactlyInAnyOrder("신분당선", "분당선");
     }
 
 
