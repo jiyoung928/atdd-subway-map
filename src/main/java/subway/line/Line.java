@@ -16,8 +16,6 @@ public class Line {
     @Column(length = 20, nullable = false)
     private String color;
 
-    @ManyToMany
-    private List<Station> stations = new ArrayList<>();
 
     private Long upStationId;
     private Long downStationId;
