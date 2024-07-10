@@ -67,6 +67,7 @@ public class LineAcceptanceTest {
                 given().log().all()
                         .when().get("/lines")
                         .then().log().all()
+                        .statusCode(HttpStatus.OK.value())
                         .extract().jsonPath().getList("name", String.class);
         //then
         assertThat(lineNames).containsExactlyInAnyOrder("신분당선", "분당선");
@@ -90,6 +91,7 @@ public class LineAcceptanceTest {
                 given().log().all()
                         .when().get("/lines")
                         .then().log().all()
+                        .statusCode(HttpStatus.OK.value())
                         .extract().jsonPath().getList("name", String.class);
         //then
         assertThat(lineNames).contains("신분당선");
@@ -200,6 +202,7 @@ public class LineAcceptanceTest {
                 .when()
                 .post("/stations")
                 .then()
+                .statusCode(HttpStatus.CREATED.value())
                 .extract().response();
     }
 
