@@ -24,12 +24,12 @@ public class Line {
     public Line() {
     }
 
-    public Line(String name, String color, Long upStationId, Long downStationId, int distance) {
-        this.name = name;
-        this.color = color;
-        this.upStationId = upStationId;
-        this.downStationId = downStationId;
-        this.distance = distance;
+    public Line(LineRequest lineRequest) {
+        this.name = lineRequest.getName();
+        this.color = lineRequest.getColor();
+        this.upStationId = lineRequest.getUpStationId();
+        this.downStationId = lineRequest.getDownStationId();
+        this.distance = lineRequest.getDistance();
     }
 
     public Long getId() {
