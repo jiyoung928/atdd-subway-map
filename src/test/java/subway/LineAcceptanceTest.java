@@ -111,13 +111,13 @@ public class LineAcceptanceTest {
 
 
         //when
-        Map<String, String> modifyParam = new HashMap<>();
-        modifyParam.put("name", "다른분당선");
-        modifyParam.put("color", "bg-red-600");
+        Map<String, String> editParam = new HashMap<>();
+        editParam.put("name", "다른분당선");
+        editParam.put("color", "bg-red-600");
 
         ExtractableResponse<Response> response =
                 given().log().all()
-                        .body(modifyParam)
+                        .body(editParam)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .when().put("/lines/{id}", lineId)
                         .then().log().all()
@@ -159,42 +159,6 @@ public class LineAcceptanceTest {
                 .extract().response();
     }
 
-    private void createTwoLines() {
-        // given
-        Map<String, String> param1 = new HashMap<>();
-        param1.put("name", "신분당선");
-        param1.put("color", "bg-red-600");
-        param1.put("upStationId", "1");
-        param1.put("downStationId", "2");
-        param1.put("distance", "10");
-
-        ExtractableResponse<Response> response =
-                given().log().all()
-                        .body(param1)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .when().post("/lines")
-                        .then().log().all()
-                        .extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-
-        Map<String, String> param2 = new HashMap<>();
-        param2.put("name", "분당선");
-        param2.put("color", "bg-green-400");
-        param2.put("upStationId", "1");
-        param2.put("downStationId", "3");
-        param2.put("distance", "20");
-
-        response =
-                given().log().all()
-                        .body(param2)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .when().post("/lines")
-                        .then().log().all()
-                        .extract();
-
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     private Response createStation(String stationName) {
         return RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

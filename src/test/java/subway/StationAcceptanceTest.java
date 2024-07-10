@@ -120,32 +120,4 @@ public class StationAcceptanceTest {
                 .extract().response();
     }
 
-    void createTwoStation() {
-        Map<String, String> paramSeoul = new HashMap<>();
-        paramSeoul.put("name", "서울역");
-
-        ExtractableResponse<Response> response =
-                RestAssured.given().log().all()
-                        .body(paramSeoul)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .when().post("/stations")
-                        .then().log().all()
-                        .extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-
-        Map<String, String> paramSuwon = new HashMap<>();
-        paramSuwon.put("name", "수원역");
-
-        response =
-                RestAssured.given().log().all()
-                        .body(paramSuwon)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .when().post("/stations")
-                        .then().log().all()
-                        .extract();
-
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    }
 }
