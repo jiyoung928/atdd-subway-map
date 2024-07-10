@@ -57,4 +57,9 @@ public class Line {
     public void setColor(String color) {
         this.color = color;
     }
+
+    public void updateLine(String name, String color) {
+        this.name = name;
+        this.color = color;
+    }
 }

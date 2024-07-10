@@ -67,8 +67,7 @@ public class LineService {
     @Transactional
     public void editLineById(Long id, LineRequest lineRequest) {
         Line line = lineRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        line.setName(lineRequest.getName());
-        line.setColor(lineRequest.getColor());
+        line.updateLine(lineRequest.getName(), lineRequest.getColor());
         lineRepository.save(line);
 
     }
