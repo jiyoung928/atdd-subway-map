@@ -82,19 +82,20 @@ public class LineAcceptanceTest {
     @DisplayName("지하철 노선을 조회한다.")
     @Test
     void showLine() {
+
         // given
-        assertThat(createLine(new LineRequest("신분당선", "bg-red-600", 1, 2, 10))
-                .statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        String showLineUrl = createLine(new LineRequest("신분당선", "bg-red-400", 1, 2, 10))
+                .getHeader("Location");
 
         // when
-        List<String> lineNames =
+        String lineName =
                 given().log().all()
-                        .when().get("/lines")
+                        .when().get(showLineUrl)
                         .then().log().all()
                         .statusCode(HttpStatus.OK.value())
-                        .extract().jsonPath().getList("name", String.class);
+                        .extract().jsonPath().get("name");
         //then
-        assertThat(lineNames).contains("신분당선");
+        assertThat(lineName).contains("신분당선");
     }
 
     /**
@@ -106,8 +107,8 @@ public class LineAcceptanceTest {
     @Test
     void editLine() {
         // given
-        String lineId  =   createLine(new LineRequest("신분당선", "bg-red-600", 1, 2, 10))
-                .getHeaders().get("Location").toString().split("/")[2];
+        String editLineUrl = createLine(new LineRequest("신분당선", "bg-red-600", 1, 2, 10))
+                .getHeader("Location");
 
 
         //when
@@ -119,7 +120,7 @@ public class LineAcceptanceTest {
                 given().log().all()
                         .body(editParam)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .when().put("/lines/{id}", lineId)
+                        .when().put(editLineUrl)
                         .then().log().all()
                         .extract();
         //then
@@ -136,13 +137,13 @@ public class LineAcceptanceTest {
     @Test
     void deleteLine() {
         // given
-        String lineId  =   createLine(new LineRequest("신분당선", "bg-red-400", 1, 2, 10))
-                .getHeaders().get("Location").toString().split("/")[2];
+        String deleteLineUrl = createLine(new LineRequest("신분당선", "bg-red-400", 1, 2, 10))
+                .getHeader("Location");
 
         //when
         ExtractableResponse<Response> response =
                 given().log().all()
-                        .when().delete("/lines/{id}", lineId)
+                        .when().delete(deleteLineUrl)
                         .then().log().all()
                         .extract();
         //then
@@ -150,12 +151,12 @@ public class LineAcceptanceTest {
 
     }
     private Response createLine(LineRequest lineRequest) {
-        return given()
+        return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(lineRequest)
                 .when()
                 .post("/lines")
-                .then()
+                .then().log().all()
                 .extract().response();
     }
 
