@@ -42,13 +42,11 @@ public class LineService {
 
     public List<LineResponse> findAllLines() {
         List<Line> lines = lineRepository.findAll();
-        List<Station> stationList = new ArrayList<>();
         List<LineResponse> lineResponses = new ArrayList<>();
 
         for (Line line : lines) {
-            findStationById(line.getUpStationId(), line.getDownStationId());
-
-            LineResponse lineResponse = new LineResponse(line.getId(), line.getName(), line.getColor(), stationList);
+            LineResponse lineResponse = new LineResponse(line.getId(), line.getName(), line.getColor(),
+                    findStationById(line.getUpStationId(), line.getDownStationId()));
             lineResponses.add(lineResponse);
 
         }
