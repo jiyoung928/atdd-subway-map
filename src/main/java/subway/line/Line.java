@@ -15,8 +15,6 @@ public class Line {
     private String name;
     @Column(length = 20, nullable = false)
     private String color;
-
-
     private Long upStationId;
     private Long downStationId;
     private Integer distance;
@@ -24,12 +22,12 @@ public class Line {
     public Line() {
     }
 
-    public Line(LineRequest lineRequest) {
-        this.name = lineRequest.getName();
-        this.color = lineRequest.getColor();
-        this.upStationId = lineRequest.getUpStationId();
-        this.downStationId = lineRequest.getDownStationId();
-        this.distance = lineRequest.getDistance();
+    public Line(String name, String color, Long upStationId, Long downStationId, Integer distance) {
+        this.name = name;
+        this.color = color;
+        this.upStationId = upStationId;
+        this.downStationId = downStationId;
+        this.distance = distance;
     }
 
     public Long getId() {
@@ -48,14 +46,6 @@ public class Line {
     }
     public Long getDownStationId() {
         return downStationId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 
     public void updateLine(String name, String color) {
