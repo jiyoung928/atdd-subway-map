@@ -75,4 +75,11 @@ public class LineService {
     }
 
 
+    public LineResponse findLine(Long id) {
+        Line line = lineRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        List<Station> stationList = findStationById(line.getUpStationId(), line.getDownStationId());
+
+        return createLineResponse(line, stationList);
+
+    }
 }

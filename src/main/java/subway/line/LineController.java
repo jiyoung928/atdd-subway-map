@@ -27,9 +27,14 @@ public class LineController {
         return ResponseEntity.ok().body(lineService.findAllLines());
     }
 
+    @GetMapping(value = "/lines/{id}")
+    public ResponseEntity<LineResponse> showLine(@PathVariable Long id) {
+        return ResponseEntity.ok().body(lineService.findLine(id));
+    }
+
     @PutMapping("/lines/{id}")
     public ResponseEntity<Void> editLine(@PathVariable Long id, @RequestBody LineRequest lineRequest) {
-        lineService.editLineById(id,lineRequest);
+        lineService.editLineById(id, lineRequest);
         return ResponseEntity.ok().build();
     }
 
