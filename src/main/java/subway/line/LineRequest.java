@@ -38,5 +38,8 @@ public class LineRequest {
         return distance;
     }
 
-
+    public Line getLine(){
+        return new Line(name, color, getUpStationId(),
+                getDownStationId(), distance);
+    }
 }

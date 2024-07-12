@@ -23,11 +23,9 @@ public class LineService {
 
     @Transactional
     public LineResponse saveLine(LineRequest lineRequest) {
-        Line line = lineRepository.save(new Line(lineRequest));
+        Line line = lineRepository.save(lineRequest.getLine());
 
-        List<Station> stationList = findStationById(line.getUpStationId(), line.getDownStationId());
-
-        return createLineResponse(line, stationList);
+        return createLineResponse(line, findStationById(line.getUpStationId(), line.getDownStationId()));
     }
 
     private LineResponse createLineResponse(Line line, List<Station> stationList) {
