@@ -1,8 +1,7 @@
-package subway.line;
+package subway.dto.line;
 
-import subway.station.Station;
+import subway.domain.station.Station;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LineResponse {

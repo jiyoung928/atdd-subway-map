@@ -1,10 +1,6 @@
-package subway.line;
-
-import subway.station.Station;
+package subway.domain.line;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Line {
