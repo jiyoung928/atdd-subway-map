@@ -108,16 +108,4 @@ public class StationAcceptanceTest {
                         .extract().jsonPath().getList("name", String.class);
         assertThat(stationNames).doesNotContain("정자역");
     }
-    
-
-    private Response createStation(String stationName) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("{\"name\":\""+ stationName +"\"}")
-                .when()
-                .post("/stations")
-                .then()
-                .extract().response();
-    }
-
 }
