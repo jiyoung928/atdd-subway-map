@@ -28,7 +28,7 @@ public class LineService {
 
     @Transactional
     public LineResponse saveLine(LineRequest lineRequest) {
-        Line line = lineRepository.save(lineRequest.getLine());
+        Line line = lineRepository.save(lineRequest.toLine());
 
         return createLineResponse(line, findStationById(line.getUpStationId(), line.getDownStationId()));
     }
