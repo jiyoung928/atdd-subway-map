@@ -33,7 +33,7 @@ public class LineService {
         return createLineResponse(line, findStationById(line.getUpStationId(), line.getDownStationId()));
     }
 
-    private LineResponse createLineResponse(Line line, List<Station> stationList) {
+    public LineResponse createLineResponse(Line line, List<Station> stationList) {
         return new LineResponse(
                 line.getId(),
                 line.getName(),

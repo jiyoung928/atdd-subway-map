@@ -1,6 +1,10 @@
 package subway.domain.line;
 
+import subway.domain.section.Section;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Line {
@@ -14,6 +18,10 @@ public class Line {
     private Long upStationId;
     private Long downStationId;
     private Integer distance;
+
+    @OneToMany(mappedBy = "line")
+    private List<Section> sections = new ArrayList<>();
+
 
     public Line() {
     }
@@ -44,8 +52,12 @@ public class Line {
         return downStationId;
     }
 
+
     public void updateLine(String name, String color) {
         this.name = name;
         this.color = color;
+    }
+    public void updateDownStationId(Long downStationId) {
+        this.downStationId = downStationId;
     }
 }

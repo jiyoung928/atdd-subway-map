@@ -1,6 +1,10 @@
 package subway.domain.station;
 
+import subway.domain.section.Section;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Station {
@@ -9,6 +13,8 @@ public class Station {
     private Long id;
     @Column(length = 20, nullable = false)
     private String name;
+    @OneToMany(mappedBy = "station")
+    private List<Section> sections = new ArrayList<>();
 
     public Station() {
     }
