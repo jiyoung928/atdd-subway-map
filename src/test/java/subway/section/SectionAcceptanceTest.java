@@ -9,21 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import subway.domain.station.Station;
+import org.springframework.test.annotation.DirtiesContext;
 import subway.dto.line.LineRequest;
-import subway.dto.line.LineResponse;
 import subway.dto.section.SectionRequest;
-import subway.line.LineAcceptanceTest;
 
-import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 
 @DisplayName("지하철 구간 관련 기능")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class SectionAcceptanceTest {
 
@@ -49,7 +46,7 @@ public class SectionAcceptanceTest {
         // given
         LineRequest lineRequest = new LineRequest("신분당선", "bg-red-600", 1, 2, 10);
         Response lineResponse = createLine(lineRequest);
-        SectionRequest sectionRequest = new SectionRequest(3, 4, 10);
+        SectionRequest sectionRequest = new SectionRequest(2, 4, 10);
 
         // when
         Response sectionResponse = createSection(lineResponse.getHeader("Location")+"/sections", sectionRequest);
