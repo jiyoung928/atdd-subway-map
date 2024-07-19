@@ -13,8 +13,6 @@ public class Station {
     private Long id;
     @Column(length = 20, nullable = false)
     private String name;
-    @OneToMany(mappedBy = "station")
-    private List<Section> sections = new ArrayList<>();
 
     public Station() {
     }

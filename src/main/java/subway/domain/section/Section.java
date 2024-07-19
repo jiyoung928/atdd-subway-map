@@ -11,31 +11,33 @@ public class Section {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "station_id")
-    private Station station;
-
-    @ManyToOne
-    @JoinColumn(name = "line_id")
-    private Line line;
-
     private Long upStationId;
+
     private Long downStationId;
 
-    public Section() {}
+    private Long distance;
 
-    public Section(Station station, Line line, Long upStationId, Long downStationId) {
-        this.station = station;
-        this.line = line;
+    protected Section() {}
+
+    public Section(Long upStationId, Long downStationId, Long distance) {
         this.upStationId = upStationId;
         this.downStationId = downStationId;
+        this.distance = distance;
     }
 
-    public Station getStation() {
-        return station;
+    public Long getId() {
+        return id;
     }
 
     public Long getUpStationId() {
         return upStationId;
+    }
+
+    public Long getDownStationId() {
+        return downStationId;
+    }
+
+    public Long getDistance() {
+        return distance;
     }
 }
