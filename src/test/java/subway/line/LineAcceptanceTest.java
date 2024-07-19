@@ -42,7 +42,7 @@ public class LineAcceptanceTest {
         // given
         // when
         // then
-        assertThat(createLine(new LineRequest("신분당선", "bg-red-600", 1, 2, 10))
+        assertThat(createLine(new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L))
                 .statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
@@ -55,10 +55,10 @@ public class LineAcceptanceTest {
     @Test
     void showLines() {
         // given
-        assertThat(createLine(new LineRequest("신분당선", "bg-red-600", 1, 2, 10))
+        assertThat(createLine(new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L))
                 .statusCode()).isEqualTo(HttpStatus.CREATED.value());
 
-        assertThat(createLine(new LineRequest("분당선", "bg-green-600", 1, 3, 20))
+        assertThat(createLine(new LineRequest("분당선", "bg-green-600", 1L, 3L, 20L))
                 .statusCode()).isEqualTo(HttpStatus.CREATED.value());
 
         // when
@@ -83,7 +83,7 @@ public class LineAcceptanceTest {
     void showLine() {
 
         // given
-        String showLineUrl = createLine(new LineRequest("신분당선", "bg-red-400", 1, 2, 10))
+        String showLineUrl = createLine(new LineRequest("신분당선", "bg-red-400", 1L, 2L, 10L))
                 .getHeader("Location");
 
         // when
@@ -106,7 +106,7 @@ public class LineAcceptanceTest {
     @Test
     void editLine() {
         // given
-        String editLineUrl = createLine(new LineRequest("신분당선", "bg-red-600", 1, 2, 10))
+        String editLineUrl = createLine(new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L))
                 .getHeader("Location");
 
 
@@ -136,7 +136,7 @@ public class LineAcceptanceTest {
     @Test
     void deleteLine() {
         // given
-        String deleteLineUrl = createLine(new LineRequest("신분당선", "bg-red-400", 1, 2, 10))
+        String deleteLineUrl = createLine(new LineRequest("신분당선", "bg-red-400", 1L, 2L, 10L))
                 .getHeader("Location");
 
         //when

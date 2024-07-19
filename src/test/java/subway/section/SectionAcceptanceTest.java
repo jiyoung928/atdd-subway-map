@@ -44,9 +44,9 @@ public class SectionAcceptanceTest {
     void createSection() {
 
         // given
-        LineRequest lineRequest = new LineRequest("신분당선", "bg-red-600", 1, 2, 10);
+        LineRequest lineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L);
         Response lineResponse = createLine(lineRequest);
-        SectionRequest sectionRequest = new SectionRequest(2, 4, 10);
+        SectionRequest sectionRequest = new SectionRequest(2L, 4L, 10L);
 
         // when
         Response sectionResponse = createSection(lineResponse.getHeader("Location")+"/sections", sectionRequest);
@@ -54,8 +54,8 @@ public class SectionAcceptanceTest {
         assertAll(
                 () -> assertThat(sectionResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
                 () -> assertThat(sectionRequest.getUpStationId() == lineRequest.getDownStationId()),
-                () -> assertThat(lineResponse.jsonPath().getList("stations.id", Long.class))
-                        .contains(lineRequest.getDownStationId())
+                () -> assertThat(sectionResponse.jsonPath().getList("stations.id", Long.class))
+                        .contains(sectionRequest.getDownStationId())
         );
 
     }
@@ -71,10 +71,10 @@ public class SectionAcceptanceTest {
     @Test
     void deleteSection() {
         // given
-        LineRequest lineRequest = new LineRequest("신분당선", "bg-red-600", 1, 2, 10);
+        LineRequest lineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L);
         Response lineResponse = createLine(lineRequest);
-        SectionRequest sectionRequest = new SectionRequest(2, 4, 10);
-        createSection(lineResponse.getHeader("Location")+"/sections", sectionRequest);
+        SectionRequest sectionRequest = new SectionRequest(2L, 4L, 10L);
+        Response sectionResponse = createSection(lineResponse.getHeader("Location")+"/sections", sectionRequest);
         long stationId = 4;
 
         //when
