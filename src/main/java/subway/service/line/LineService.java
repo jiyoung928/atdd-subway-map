@@ -2,6 +2,7 @@ package subway.service.line;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import subway.domain.section.Section;
 import subway.domain.station.Station;
 import subway.domain.line.Line;
 import subway.domain.line.LineRepository;
@@ -28,44 +29,30 @@ public class LineService {
 
     @Transactional
     public LineResponse saveLine(LineRequest lineRequest) {
-        Line line = lineRepository.save(lineRequest.toLine());
 
-        return createLineResponse(line, findStationById(line.getUpStationId(), line.getDownStationId()));
+        Line line = lineRepository.save(
+                new Line(lineRequest.getName(),
+                        lineRequest.getColor(),
+                        new Section(lineRequest.getUpStationId(), lineRequest.getDownStationId(), lineRequest.getDistance())
+                ));
+
+        return LineResponse.createResponse(line, getLineStations(line));
     }
-
-    public LineResponse createLineResponse(Line line, List<Station> stationList) {
-        return new LineResponse(
-                line.getId(),
-                line.getName(),
-                line.getColor(),
-                stationList
-        );
-    }
-
 
     public List<LineResponse> findAllLines() {
         List<Line> lines = lineRepository.findAll();
         List<LineResponse> lineResponses = new ArrayList<>();
 
         for (Line line : lines) {
-            LineResponse lineResponse = new LineResponse(line.getId(), line.getName(), line.getColor(),
-                    findStationById(line.getUpStationId(), line.getDownStationId()));
-            lineResponses.add(lineResponse);
-
+            lineResponses.add(LineResponse.createResponse(line, getLineStations(line)));
         }
 
         return lineResponses;
     }
 
-    public List<Station> findStationById(Long upStationId, Long downStationId) {
-        List<Station> stationList = new ArrayList<>();
-
-        stationList.add(stationRepository.findById(upStationId)
-                .orElseThrow(IllegalArgumentException::new));
-        stationList.add(stationRepository.findById(downStationId)
-                .orElseThrow(IllegalArgumentException::new));
-
-        return stationList;
+    public LineResponse findLine(Long id) {
+        Line line = lineRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return LineResponse.createResponse(line, getLineStations(line));
     }
     @Transactional
     public void editLineById(Long id, LineRequest lineRequest) {
@@ -80,11 +67,10 @@ public class LineService {
     }
 
 
-    public LineResponse findLine(Long id) {
-        Line line = lineRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        List<Station> stationList = findStationById(line.getUpStationId(), line.getDownStationId());
-
-        return createLineResponse(line, stationList);
-
+    public List<Station> getLineStations(Line line) {
+        return stationRepository.findByIdIn(line.getStationIds());
     }
+
+
+
 }

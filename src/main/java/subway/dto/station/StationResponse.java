@@ -1,5 +1,7 @@
 package subway.dto.station;
 
+import subway.domain.station.Station;
+
 public class StationResponse {
     private Long id;
     private String name;
@@ -15,5 +17,12 @@ public class StationResponse {
 
     public String getName() {
         return name;
+    }
+
+    public static StationResponse createResponse(Station line) {
+        return new StationResponse(
+                line.getId(),
+                line.getName()
+        );
     }
 }
