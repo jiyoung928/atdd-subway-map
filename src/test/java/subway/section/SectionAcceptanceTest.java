@@ -93,6 +93,7 @@ public class SectionAcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(광교역 == lineRequest.getDownStationId()),
+                () -> assertThat(response.jsonPath().getList("stations.id", Long.class)).doesNotContain(광교역),
                 () -> assertThat(lineResponse.jsonPath().getList("stations").size() > 1)
         );
 
