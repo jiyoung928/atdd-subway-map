@@ -1,5 +1,6 @@
 package subway.controller.section;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import subway.dto.line.LineResponse;
@@ -25,9 +26,10 @@ public class SectionController {
     }
 
     @DeleteMapping("/lines/{id}/sections")
-    public ResponseEntity<Void> deleteSection(@PathVariable Long id, @RequestParam("stationId") Long stationId ) {
-        sectionService.deleteSection(id, stationId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<LineResponse> deleteSection(@PathVariable Long id, @RequestParam("stationId") Long stationId ) {
+        LineResponse line = sectionService.deleteSection(id, stationId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(line);
 
     }
 

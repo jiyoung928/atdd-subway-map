@@ -17,6 +17,8 @@ import subway.dto.line.LineResponse;
 import subway.dto.section.SectionRequest;
 import subway.service.line.LineService;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 public class SectionService {
@@ -47,10 +49,12 @@ public class SectionService {
     }
 
     @Transactional
-    public void deleteSection(Long id, Long stationId) {
+    public LineResponse deleteSection(Long id, Long stationId) {
 
         Line line = lineRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         line.removeLastStation(stationId);
+        List<Station> stationList = lineService.getLineStations(line);
+        return LineResponse.createResponse(line, lineService.getLineStations(line));
 
     }
 }
