@@ -1,10 +1,8 @@
-package subway.common.response;
+package subway.common.exception;
 
-public class InvalidDownStationException extends BusinessException{
-    public InvalidDownStationException(ErrorCode errorCode, String message) {
-        super(errorCode, message);
-    }
+import subway.common.response.ErrorCode;
 
+public class InvalidDownStationException extends BusinessException {
     public InvalidDownStationException(ErrorCode errorCode) {
         super(errorCode);
     }

@@ -1,10 +1,8 @@
-package subway.common.response;
+package subway.common.exception;
+
+import subway.common.response.ErrorCode;
 
 public class InsufficientStationsException extends BusinessException {
-    public InsufficientStationsException(ErrorCode errorCode, String message) {
-        super(errorCode, message);
-    }
-
     public InsufficientStationsException(ErrorCode errorCode) {
         super(errorCode);
     }

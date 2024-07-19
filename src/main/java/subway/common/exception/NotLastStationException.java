@@ -1,10 +1,8 @@
-package subway.common.response;
+package subway.common.exception;
+
+import subway.common.response.ErrorCode;
 
 public class NotLastStationException extends BusinessException {
-    public NotLastStationException(ErrorCode errorCode, String message) {
-        super(errorCode, message);
-    }
-
     public NotLastStationException(ErrorCode errorCode) {
         super(errorCode);
     }
