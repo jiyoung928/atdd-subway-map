@@ -1,6 +1,5 @@
 package subway.section;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,8 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import subway.util.TestUtil;
 import subway.dto.line.LineRequest;
 import subway.dto.section.SectionRequest;
 
@@ -17,6 +16,8 @@ import subway.dto.section.SectionRequest;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static subway.util.TestUtil.createLine;
+import static subway.util.TestUtil.createStation;
 
 
 @DisplayName("지하철 구간 관련 기능")
@@ -24,13 +25,18 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class SectionAcceptanceTest {
 
+    private static Long 강남역;
+    private static Long 양재역;
+    private static Long 판교역;
+    private static Long 광교역;
+
 
     @BeforeEach
     void initStation() {
-        createStation("강남역");
-        createStation("양재역");
-        createStation("판교역");
-        createStation("광교역");
+        강남역 = createStation("강남역").jsonPath().getLong("id");
+        양재역 = createStation("양재역").jsonPath().getLong("id");
+        판교역 = createStation("판교역").jsonPath().getLong("id");
+        광교역 = createStation("광교역").jsonPath().getLong("id");
     }
     /**
      * Given: 새로운 지하철 구간 정보를 입력하고,
@@ -44,12 +50,12 @@ public class SectionAcceptanceTest {
     void createSection() {
 
         // given
-        LineRequest lineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L);
+        LineRequest lineRequest = new LineRequest("신분당선", "bg-red-600", 강남역, 양재역, 10L);
         Response lineResponse = createLine(lineRequest);
-        SectionRequest sectionRequest = new SectionRequest(2L, 4L, 10L);
+        SectionRequest sectionRequest = new SectionRequest(양재역, 광교역, 10L);
 
         // when
-        Response sectionResponse = createSection(lineResponse.getHeader("Location")+"/sections", sectionRequest);
+        Response sectionResponse = TestUtil.createSection(lineResponse.getHeader("Location")+"/sections", sectionRequest);
 
         assertAll(
                 () -> assertThat(sectionResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
@@ -71,53 +77,26 @@ public class SectionAcceptanceTest {
     @Test
     void deleteSection() {
         // given
-        LineRequest lineRequest = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L);
+        LineRequest lineRequest = new LineRequest("신분당선", "bg-red-600", 강남역, 양재역, 10L);
         Response lineResponse = createLine(lineRequest);
-        SectionRequest sectionRequest = new SectionRequest(2L, 4L, 10L);
-        Response sectionResponse = createSection(lineResponse.getHeader("Location")+"/sections", sectionRequest);
-        long stationId = 4;
+        SectionRequest sectionRequest = new SectionRequest(양재역, 광교역, 10L);
+        TestUtil.createSection(lineResponse.getHeader("Location")+"/sections", sectionRequest);
 
         //when
         ExtractableResponse<Response> response =
                 given().log().all()
-                .when().delete(lineResponse.getHeader("Location")+"/sections?stationId="+stationId)
+                .when().delete(lineResponse.getHeader("Location")+"/sections?stationId="+광교역)
                 .then().log().all()
                 .extract();
 
         //then
         assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(stationId == lineRequest.getDownStationId()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(광교역 == lineRequest.getDownStationId()),
                 () -> assertThat(lineResponse.jsonPath().getList("stations").size() > 1)
         );
 
     }
 
-    private Response createLine(LineRequest lineRequest) {
-        return  given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(lineRequest)
-                .when().post("/lines")
-                .then().log().all()
-                .extract().response();
 
-    }
-    private Response createStation(String stationName) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("{\"name\":\""+ stationName +"\"}")
-                .when()
-                .post("/stations")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract().response();
-    }
-    private Response createSection(String url, SectionRequest sectionRequest) {
-        return  given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(sectionRequest)
-                .when().post(url)
-                .then().log().all()
-                .extract().response();
-    }
 }

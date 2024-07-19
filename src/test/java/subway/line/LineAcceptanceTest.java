@@ -1,6 +1,5 @@
 package subway.line;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import subway.util.TestUtil;
 import subway.dto.line.LineRequest;
 
 import java.util.HashMap;
@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static subway.util.TestUtil.createStation;
 
 @DisplayName("지하철 노선 관련 기능")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -42,7 +43,7 @@ public class LineAcceptanceTest {
         // given
         // when
         // then
-        assertThat(createLine(new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L))
+        assertThat(TestUtil.createLine(new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L))
                 .statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
@@ -55,10 +56,10 @@ public class LineAcceptanceTest {
     @Test
     void showLines() {
         // given
-        assertThat(createLine(new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L))
+        assertThat(TestUtil.createLine(new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L))
                 .statusCode()).isEqualTo(HttpStatus.CREATED.value());
 
-        assertThat(createLine(new LineRequest("분당선", "bg-green-600", 1L, 3L, 20L))
+        assertThat(TestUtil.createLine(new LineRequest("분당선", "bg-green-600", 1L, 3L, 20L))
                 .statusCode()).isEqualTo(HttpStatus.CREATED.value());
 
         // when
@@ -83,7 +84,7 @@ public class LineAcceptanceTest {
     void showLine() {
 
         // given
-        String showLineUrl = createLine(new LineRequest("신분당선", "bg-red-400", 1L, 2L, 10L))
+        String showLineUrl = TestUtil.createLine(new LineRequest("신분당선", "bg-red-400", 1L, 2L, 10L))
                 .getHeader("Location");
 
         // when
@@ -106,7 +107,7 @@ public class LineAcceptanceTest {
     @Test
     void editLine() {
         // given
-        String editLineUrl = createLine(new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L))
+        String editLineUrl = TestUtil.createLine(new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10L))
                 .getHeader("Location");
 
 
@@ -136,7 +137,7 @@ public class LineAcceptanceTest {
     @Test
     void deleteLine() {
         // given
-        String deleteLineUrl = createLine(new LineRequest("신분당선", "bg-red-400", 1L, 2L, 10L))
+        String deleteLineUrl = TestUtil.createLine(new LineRequest("신분당선", "bg-red-400", 1L, 2L, 10L))
                 .getHeader("Location");
 
         //when
@@ -149,25 +150,6 @@ public class LineAcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
 
     }
-    private Response createLine(LineRequest lineRequest) {
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(lineRequest)
-                .when()
-                .post("/lines")
-                .then().log().all()
-                .extract().response();
-    }
 
-    private Response createStation(String stationName) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("{\"name\":\""+ stationName +"\"}")
-                .when()
-                .post("/stations")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract().response();
-    }
 
 }
