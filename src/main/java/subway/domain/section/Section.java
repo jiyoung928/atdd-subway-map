@@ -1,15 +1,18 @@
 package subway.domain.section;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import subway.domain.line.Line;
+
+import javax.persistence.*;
 
 @Entity
 public class Section {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "line_id")
+    private Line line;
 
     private Long upStationId;
 

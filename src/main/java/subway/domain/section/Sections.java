@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 @Embeddable
 public class Sections {
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "line_id")
+    @OneToMany(mappedBy = "line", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Section> sections = new ArrayList<>();
 
     public void add(Section section) {
