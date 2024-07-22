@@ -39,4 +39,12 @@ public class TestUtil {
                 .then().log().all()
                 .extract().response();
     }
+
+    public static Response showLine(String url) {
+        return given().log().all()
+                .when().get(url)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().response();
+    }
 }

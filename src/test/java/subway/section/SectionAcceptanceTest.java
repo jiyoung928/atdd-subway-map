@@ -8,10 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
-import subway.util.TestUtil;
 import subway.dto.line.LineRequest;
 import subway.dto.section.SectionRequest;
-
+import subway.util.TestUtil;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,7 +58,7 @@ public class SectionAcceptanceTest {
 
         assertAll(
                 () -> assertThat(sectionResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(sectionRequest.getUpStationId() == lineRequest.getDownStationId()),
+                () -> assertThat(sectionRequest.getUpStationId().equals(lineRequest.getDownStationId())),
                 () -> assertThat(sectionResponse.jsonPath().getList("stations.id", Long.class))
                         .contains(sectionRequest.getDownStationId())
         );
@@ -78,14 +77,16 @@ public class SectionAcceptanceTest {
     void deleteSection() {
         // given
         LineRequest lineRequest = new LineRequest("신분당선", "bg-red-600", 강남역, 양재역, 10L);
-        Response lineResponse = createLine(lineRequest);
+        String lineUrl = createLine(lineRequest).getHeader("Location");
         SectionRequest sectionRequest = new SectionRequest(양재역, 광교역, 10L);
-        TestUtil.createSection(lineResponse.getHeader("Location")+"/sections", sectionRequest);
+        TestUtil.createSection(lineUrl+"/sections", sectionRequest);
+        Response lineResponse = TestUtil.showLine(lineUrl);
+
 
         //when
         ExtractableResponse<Response> response =
                 given().log().all()
-                .when().delete(lineResponse.getHeader("Location")+"/sections?stationId="+광교역)
+                .when().delete(lineUrl+"/sections?stationId="+광교역)
                 .then().log().all()
                 .extract();
 
@@ -94,7 +95,7 @@ public class SectionAcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(광교역 == lineRequest.getDownStationId()),
                 () -> assertThat(response.jsonPath().getList("stations.id", Long.class)).doesNotContain(광교역),
-                () -> assertThat(lineResponse.jsonPath().getList("stations").size() > 1)
+                () -> assertThat(lineResponse.jsonPath().getList("stations").size() > 2)
         );
 
     }
