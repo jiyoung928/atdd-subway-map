@@ -29,12 +29,11 @@ public class Sections {
             throw new InvalidUpSationException(ErrorCode.INVALID_UP_STATION_ADD);
         }
         // 새로운 구간의 하행역이 이미 해당 노선에 등록되어있는 경우
-        else if(getStationIds().contains(section.getDownStationId())) {
+        if(getStationIds().contains(section.getDownStationId())) {
             throw new InvalidDownStationException(ErrorCode.INVALID_DOWN_STATION_ADD);
         }
-        else {
-            this.sections.add(section);
-        }
+        this.sections.add(section);
+
     }
 
     public Collection<Long> getStationIds() {
@@ -50,16 +49,17 @@ public class Sections {
 
 
     public void removeLastStation(Long stationId) {
+        // 구간이 1개 이하인경우,
+        if (this.sections.size() <= 1) {
+            throw new InsufficientStationsException(ErrorCode.INSUFFICIENT_STATION_DELETE);
+        }
         // 지하철 노선에 등록된 역(하행 종점역)이 아닌 경우
         if (!getLastDownStationId().equals(stationId)) {
             throw new NotLastStationException(ErrorCode.NOT_LAST_STATION_DELETE);
         }
-        // 구간이 1개인 경우
-        else if (getStationIds().size() == 1) {
-            throw new InsufficientStationsException(ErrorCode.INSUFFICIENT_STATION_DELETE);
-        }
-        else {
-            this.sections.remove(sections.size() - 1);
-        }
+
+
+        this.sections.remove(sections.size() - 1);
+
     }
 }
