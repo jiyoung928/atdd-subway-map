@@ -1,9 +1,9 @@
 package subway.domain.section;
 
-import subway.domain.line.Line;
-import subway.domain.station.Station;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Section {

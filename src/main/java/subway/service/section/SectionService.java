@@ -2,11 +2,6 @@ package subway.service.section;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import subway.common.exception.InsufficientStationsException;
-import subway.common.exception.InvalidDownStationException;
-import subway.common.exception.InvalidUpSationException;
-import subway.common.exception.NotLastStationException;
-import subway.common.response.*;
 import subway.domain.line.Line;
 import subway.domain.line.LineRepository;
 import subway.domain.section.Section;
@@ -16,8 +11,6 @@ import subway.domain.station.StationRepository;
 import subway.dto.line.LineResponse;
 import subway.dto.section.SectionRequest;
 import subway.service.line.LineService;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -53,7 +46,6 @@ public class SectionService {
 
         Line line = lineRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         line.removeLastStation(stationId);
-        List<Station> stationList = lineService.getLineStations(line);
         return LineResponse.createResponse(line, lineService.getLineStations(line));
 
     }
