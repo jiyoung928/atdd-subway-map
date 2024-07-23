@@ -36,7 +36,7 @@ public class SectionService {
         Station downStation = stationRepository.findById(sectionRequest.getDownStationId())
                 .orElseThrow(IllegalArgumentException::new);
 
-        line.addSection(new Section(upStation.getId(), downStation.getId(), sectionRequest.getDistance()));
+        line.addSection(new Section(line, upStation.getId(), downStation.getId(), sectionRequest.getDistance()));
 
         return LineResponse.createResponse(line, lineService.getLineStations(line));
     }

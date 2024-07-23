@@ -4,9 +4,7 @@ import subway.domain.section.Section;
 import subway.domain.section.Sections;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 public class Line {
@@ -27,10 +25,9 @@ public class Line {
     public Line() {
     }
 
-    public Line(String name, String color, Section section) {
+    public Line(String name, String color) {
         this.name = name;
         this.color = color;
-        this.sections.add(section);
     }
 
     public Long getId() {
@@ -53,10 +50,6 @@ public class Line {
 
     public Collection<Long> getStationIds() {
         return sections.getStationIds();
-    }
-
-    public Long getLastStationId() {
-        return sections.getLastDownStationId();
     }
 
     public void addSection(Section section) {

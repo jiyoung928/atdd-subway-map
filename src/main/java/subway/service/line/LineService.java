@@ -2,10 +2,10 @@ package subway.service.line;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import subway.domain.section.Section;
-import subway.domain.station.Station;
 import subway.domain.line.Line;
 import subway.domain.line.LineRepository;
+import subway.domain.section.Section;
+import subway.domain.station.Station;
 import subway.domain.station.StationRepository;
 import subway.dto.line.LineRequest;
 import subway.dto.line.LineResponse;
@@ -31,10 +31,9 @@ public class LineService {
     public LineResponse saveLine(LineRequest lineRequest) {
 
         Line line = lineRepository.save(
-                new Line(lineRequest.getName(),
-                        lineRequest.getColor(),
-                        new Section(lineRequest.getUpStationId(), lineRequest.getDownStationId(), lineRequest.getDistance())
-                ));
+                new Line(lineRequest.getName(), lineRequest.getColor()));
+
+        line.addSection(new Section(line, lineRequest.getUpStationId(), lineRequest.getDownStationId(), lineRequest.getDistance()));
 
         return LineResponse.createResponse(line, getLineStations(line));
     }
